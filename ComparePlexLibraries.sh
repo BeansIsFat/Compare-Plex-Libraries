@@ -38,7 +38,7 @@ done
 
 getList() {
   # Prints title,year for movies
-  awk -F "\",\"" '{print "\42"$2"\42"","$6}' "$1" | sort
+  awk '{print $2 "," $6}' FPAT="([^,]+)|(\"[^\"]+\")" "$1" | sort
 }
 
 comm -13 \
