@@ -9,8 +9,11 @@ LIB1=Movies
 LIB2=Movies-4K
 DIR=/mnt/local/Media/ExportTools
 TMPFILE=-level\ 1.csv.tmp-Wait-Please
+
+printf "Getting Plex IP address"
 PLEXIP=$(docker inspect \
   -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' plex)
+printf  '\33[2K\r'
 
 for LIBRARY in $LIB1 $LIB2
 do
