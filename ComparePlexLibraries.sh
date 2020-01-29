@@ -17,6 +17,7 @@ printf  '\33[2K\r'
 
 for LIBRARY in $LIB1 $LIB2
 do
+  printf "Processing $LIBRARY library:  "
   curl -sG -d "title=$LIBRARY" \
     -d "skipts=true" \
     -d "level=level%201" \
@@ -25,7 +26,6 @@ do
     "http://$PLEXIP:32400/applications/ExportTools/launch" \
     > /dev/null
 
-  printf "Processing $LIBRARY library:  "
   while :
   do
     for c in / - \\ \|
