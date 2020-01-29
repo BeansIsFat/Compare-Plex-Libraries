@@ -9,11 +9,21 @@ DIR=/mnt/local/Media/ExportTools
 LIB1=Movies
 LIB2=Movies-4K
 TMPFILE=-level\ 1.csv.tmp-Wait-Please
+PLEXIP=$(docker inspect \
+  -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' plex)
 
 for LIBRARY in $LIB1 $LIB2
 do
-  docker exec plex bash -c \
-    'curl -s "http://localhost:32400/applications/ExportTools/launch?title='"$LIBRARY"'&skipts=true&level=level%201&X-Plex-Token='"$PLEXTOKEN"'&playlist=false"' > /dev/null
+  curl -sG -d "title=$LIBRARY" \
+   -d "skipts=true" \
+   -d "level=level%201" \
+   -d "X-Plex-Token=$PLEXTOKEN" \
+   -d "playlist=false" \
+   "http://$PLEXIP:32400/applications/ExportTools/launch" \
+   > /dev/null
+
+  sleep 1 # wait a second for the temp file to be created
+
   while [[ -e $DIR/$LIBRARY$TMPFILE ]]
     do sleep 1
   done
