@@ -37,7 +37,8 @@ do
 done
 
 getList() {
-  awk -F "\",\"" '{print $2}' "$1" | sort
+  # Prints title,year for movies
+  awk -F "\",\"" '{print $2","$6}' "$1" | sort
 }
 
 comm -13 \
