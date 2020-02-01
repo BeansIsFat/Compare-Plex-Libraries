@@ -7,6 +7,8 @@
 # Description:   Finds items in one Plex library missing from another   #
 #########################################################################
 #
+# Usage: ComparePlexLibraries.sh library1 library2 librarytype
+#
 # Will show all the titles in the 2nd library that are missing from the 1st
 # e.g. find the movies in 4K that aren't in the regular library
 #
@@ -22,13 +24,30 @@
 
 # User variables
 PLEXTOKEN=YourPlexToken
-LIB1="Movies"       # case-sensitive
-LIB2="Movies-4K"    # case-sensitive
-LIBTYPE="Movies"    # set to TV or Movies to get proper metadata for library type
-DIR=/mnt/local/Media/ExportTools # export location
+DIR=/mnt/local/Media/ExportTools # Default export location for ExportTools
 
 # Internal variables
 TMPSUFFIX=.csv.tmp-Wait-Please
+
+if [[ $# -lt 3 ]] ; then
+  echo "Not enough arguments"
+  echo "Usage: ComparePlexLibraries.sh library1 library2 librarytype"
+  echo
+  echo "Library names must be properly escaped"
+  echo "  e.g TV\\ Shows or \"TV Shows\""
+  echo
+  echo "librarytype must be tv or movie"
+  exit 0
+fi
+
+if ! [[ $3 =~ ^(tv|movie)$ ]] ; then
+  echo "librarytype must be tv or movie"
+  exit 0
+fi
+
+LIB1=$1
+LIB2=$2
+LIBTYPE=$3
 
 printf "Getting Plex IP address"
 PLEXIP=$(docker inspect \
@@ -36,10 +55,10 @@ PLEXIP=$(docker inspect \
 printf  '\33[2K\r'
 
 case $LIBTYPE in
-  Movies)
+  movie)
     LEVEL="level 1"
     ;;
-  TV)
+  tv)
     LEVEL="Show Only 1"
     ;;
   *)

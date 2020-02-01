@@ -1,6 +1,8 @@
 # Compare Plex Libraries
 Script to compare Plex Movie or TV libraries. Written for Cloudbox but could be adapted to other Plex configurations.
 
+Usage: ComparePlexLibraries.sh library1 library2 librarytype
+
 Will show all the titles in the 2nd library that are missing from the 1st
 e.g. find the movies in 4K that aren't in the regular library
 
