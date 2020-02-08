@@ -9,15 +9,24 @@
 #
 # Usage: ComparePlexLibraries.sh library1 library2 librarytype
 #
-# Will show all the titles in the 2nd library that are missing from the 1st
-# e.g. find the movies in 4K that aren't in the regular library
+# Will show all the titles in the 2nd library that are missing from the
+# 1st e.g. find the movies in 4K that aren't in the regular library
 #
 # Depends on accurate metadata. If a library item exists but is reported
 # as missing that means the metadata is probably slightly different.
 # Go to Fix Match > Search Options > Agent for the item in both libraries
 # and select the same agent for both to resolve this.
 #
-# Assumes Plex is running from Docker container with default CloudBox paths
+# Edit User variables before use
+#
+# PLEXTOKEN: See https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
+# for information on getting your Plex token
+#
+# DIR: should be the path to export media in ExportTools
+# Be sure to provide the absolute path if you are running Plex in Docker
+#
+# PLEXURL: should not have a trailing slash but should have the port if
+# you are accessing without a domain (e.g. http://localhost:32400)
 #
 # Requires ExportTools to be installed and configured in Plex
 # https://github.com/ukdtom/ExportTools.bundle/wiki
@@ -25,6 +34,7 @@
 # User variables
 PLEXTOKEN=YourPlexToken
 DIR=/mnt/local/Media/ExportTools # Default export location for ExportTools
+PLEXURL=YourPlexURL # e.g. https://plex.yourdomain.tld
 
 # Internal variables
 TMPSUFFIX=.csv.tmp-Wait-Please
@@ -49,11 +59,6 @@ LIB1=$1
 LIB2=$2
 LIBTYPE=$3
 
-printf "Getting Plex IP address"
-PLEXIP=$(docker inspect \
-  -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' plex)
-printf  '\33[2K\r'
-
 case $LIBTYPE in
   movie)
     LEVEL="level 1"
@@ -73,7 +78,7 @@ do
     -d "level=${LEVEL// /%20}" \
     -d "X-Plex-Token=$PLEXTOKEN" \
     -d "playlist=false" \
-    "http://$PLEXIP:32400/applications/ExportTools/launch" \
+    "$PLEXURL/applications/ExportTools/launch" \
     > /dev/null
 
   while :
