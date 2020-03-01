@@ -87,7 +87,7 @@ do
     do
       # Update progress spinner
       printf '%s\b' "$c"
-      sleep .2
+      sleep .5
       # When temp file is gone erase line and break out of both loops
       [[ ! -f $DIR/$LIBRARY-$LEVEL$TMPSUFFIX ]] && { printf '\33[2K\r'; break 2; }
     done
