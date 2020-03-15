@@ -61,7 +61,7 @@ LIBTYPE=$3
 
 case $LIBTYPE in
   movie)
-    LEVEL="level 1"
+    LEVEL="Level 1"
     ;;
   tv)
     LEVEL="Show Only 1"
