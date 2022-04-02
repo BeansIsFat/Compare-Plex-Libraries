@@ -24,11 +24,11 @@ Go to Fix Match > Search Options > Agent for the item in both libraries and sele
 
 ## You must edit the following user variables before use
 
-`PLEXTOKEN` See https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/ for information on getting your Plex token
+`PLEXTOKEN` — see https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/ for information on getting your Plex token
 
-`DIR` should be the path to export media in ExportTools. Be sure to provide the absolute path if you are running Plex in Docker.
+`DIR` — should be the path to export media in ExportTools. Be sure to provide the absolute path if you are running Plex in Docker.
 
-`PLEXURL` should not have a trailing slash but should have the port if you are accessing without a domain (e.g. http://localhost:32400)
+`PLEXURL` — should not have a trailing slash but should have the port if you are accessing without a domain (e.g. http://localhost:32400)
 
 Requires ExportTools to be installed and configured in Plex
 https://github.com/ukdtom/ExportTools.bundle/wiki
