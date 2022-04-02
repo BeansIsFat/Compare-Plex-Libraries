@@ -22,7 +22,7 @@ Depends on accurate metadata. If a library item exists but is reported as missin
 
 Go to Fix Match > Search Options > Agent for the item in both libraries and select the same agent for both to resolve this
 
-Edit User variables before use
+## You must edit the following user variables before use
 
 `PLEXTOKEN` See https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/ for information on getting your Plex token
 
