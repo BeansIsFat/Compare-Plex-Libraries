@@ -55,12 +55,12 @@ lib2=${lib2:-Movies-4K}
 
 # process command line arguments and assign them to named variables
 while [ $# -gt 0 ]; do
-	if [[ $1 == *"--"* ]]; then
-		param="${1/--/}"
-		declare $param="$2"
-		# echo $1 $2
-	fi
-	shift
+  if [[ $1 == *"--"* ]]; then
+    param="${1/--/}"
+    declare $param="$2"
+    # echo $1 $2
+  fi
+  shift
 done
 
 if ! [[ $lib_type =~ ^(tv|movie)$ ]] ; then
