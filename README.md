@@ -1,10 +1,18 @@
 # Compare Plex Libraries
 Script to compare Plex Movie or TV libraries. Written for Cloudbox but could be adapted to other Plex configurations.
 
-Usage: ComparePlexLibraries.sh library1 library2 librarytype
+Will show all the titles in the 2nd library that are missing from the 1st e.g. find the movies in 4K that aren't in the regular library
 
-Will show all the titles in the 2nd library that are missing from the 1st
-e.g. find the movies in 4K that aren't in the regular library
+Usage:
+```ComparePlexLibraries.sh --lib1 library_name --lib2 library_name --lib_type library_type```
+ 
+Example:
+```ComparePlexLibraries.sh --lib1 Movies --lib2 Movies-4K --lib_type movie```
+
+The example represents the default values used if no options are supplied
+
+Library names must be properly escaped
+e.g `TV\ Shows` or ``"TV Shows"``
 
 Useful if you have a 4K library using Trakt to add items via Radarr and want to make sure you have the regular HD version without having to sync Radarr instances
 
