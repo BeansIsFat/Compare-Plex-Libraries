@@ -7,10 +7,19 @@
 # Description:   Finds items in one Plex library missing from another   #
 #########################################################################
 #
-# Usage: ComparePlexLibraries.sh library1 library2 librarytype
-#
 # Will show all the titles in the 2nd library that are missing from the
 # 1st e.g. find the movies in 4K that aren't in the regular library
+#
+# Usage:
+# ComparePlexLibraries.sh --lib1 library_name --lib2 library_name --lib_type library_type
+# 
+# Example:
+# ComparePlexLibraries.sh --lib1 Movies --lib2 Movies-4K --lib_type movie
+#
+# The example represents the default values used if no options are supplied
+#
+# Library names must be properly escaped
+# e.g TV\ Shows or "TV Shows"
 #
 # Depends on accurate metadata. If a library item exists but is reported
 # as missing that means the metadata is probably slightly different.
@@ -39,27 +48,27 @@ PLEXURL=YourPlexURL # e.g. https://plex.yourdomain.tld
 # Internal variables
 TMPSUFFIX=.csv.tmp-Wait-Please
 
-if [[ $# -lt 3 ]] ; then
-  echo "Not enough arguments"
-  echo "Usage: ComparePlexLibraries.sh library1 library2 librarytype"
-  echo
-  echo "Library names must be properly escaped"
-  echo "  e.g TV\\ Shows or \"TV Shows\""
-  echo
-  echo "librarytype must be tv or movie"
+# command line options (case-sensitive), set to defaults
+lib_type=${lib_type:-movie}
+lib1=${lib1:-Movies}
+lib2=${lib2:-Movies-4K}
+
+# process command line arguments and assign them to named variables
+while [ $# -gt 0 ]; do
+	if [[ $1 == *"--"* ]]; then
+		param="${1/--/}"
+		declare $param="$2"
+		# echo $1 $2
+	fi
+	shift
+done
+
+if ! [[ $lib_type =~ ^(tv|movie)$ ]] ; then
+  echo "lib_type must be tv or movie"
   exit 0
 fi
 
-if ! [[ $3 =~ ^(tv|movie)$ ]] ; then
-  echo "librarytype must be tv or movie"
-  exit 0
-fi
-
-LIB1=$1
-LIB2=$2
-LIBTYPE=$3
-
-case $LIBTYPE in
+case $lib_type in
   movie)
     LEVEL="Level 1"
     ;;
@@ -69,7 +78,7 @@ case $LIBTYPE in
   *)
 esac
 
-for LIBRARY in "$LIB1" "$LIB2"
+for LIBRARY in "$lib1" "$lib2"
 do
   # Launch ExportTools via URL for selected library
   printf "Processing $LIBRARY library:  "
@@ -112,5 +121,5 @@ getList() {
 
 # Compares both lists, returning only the unique items in the second list
 comm -13 \
-  <(getList "$DIR/$LIB1-$LEVEL.csv") \
-  <(getList "$DIR/$LIB2-$LEVEL.csv")
+  <(getList "$DIR/$lib1-$LEVEL.csv") \
+  <(getList "$DIR/$lib2-$LEVEL.csv")
