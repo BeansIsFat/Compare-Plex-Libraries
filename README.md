@@ -4,10 +4,12 @@ Script to compare Plex Movie or TV libraries. Written for Cloudbox but could be 
 Will show all the titles in the 2nd library that are missing from the 1st e.g. find the movies in 4K that aren't in the regular library
 
 Usage:
-```ComparePlexLibraries.sh --lib1 library_name --lib2 library_name --lib_type library_type```
- 
+
+    ComparePlexLibraries.sh --lib1 library_name --lib2 library_name --lib_type library_type
+    
 Example:
-```ComparePlexLibraries.sh --lib1 Movies --lib2 Movies-4K --lib_type movie```
+
+    ComparePlexLibraries.sh --lib1 Movies --lib2 Movies-4K --lib_type movie
 
 The example represents the default values used if no options are supplied
 
@@ -22,11 +24,11 @@ Go to Fix Match > Search Options > Agent for the item in both libraries and sele
 
 Edit User variables before use
 
-PLEXTOKEN: See https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/ for information on getting your Plex token
+`PLEXTOKEN` See https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/ for information on getting your Plex token
 
-DIR: should be the path to export media in ExportTools. Be sure to provide the absolute path if you are running Plex in Docker.
+`DIR` should be the path to export media in ExportTools. Be sure to provide the absolute path if you are running Plex in Docker.
 
-PLEXURL: should not have a trailing slash but should have the port if you are accessing without a domain (e.g. http://localhost:32400)
+`PLEXURL` should not have a trailing slash but should have the port if you are accessing without a domain (e.g. http://localhost:32400)
 
 Requires ExportTools to be installed and configured in Plex
 https://github.com/ukdtom/ExportTools.bundle/wiki
