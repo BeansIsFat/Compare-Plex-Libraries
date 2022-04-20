@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 #########################################################################
 # Title:         ComparePlexLibraries                                   #
@@ -12,7 +12,7 @@
 #
 # Usage:
 # ComparePlexLibraries.sh --lib1 library_name --lib2 library_name --lib_type library_type
-# 
+#
 # Example:
 # ComparePlexLibraries.sh --lib1 Movies --lib2 Movies-4K --lib_type movie
 #
@@ -45,9 +45,6 @@ PLEXTOKEN=YourPlexToken
 DIR=/mnt/local/Media/ExportTools # Default export location for ExportTools
 PLEXURL=YourPlexURL # e.g. https://plex.yourdomain.tld
 
-# Internal variables
-TMPSUFFIX=.csv.tmp-Wait-Please
-
 # command line options (case-sensitive), set to defaults
 lib_type=${lib_type:-movie}
 lib1=${lib1:-Movies}
@@ -58,7 +55,6 @@ while [ $# -gt 0 ]; do
   if [[ $1 == *"--"* ]]; then
     param="${1/--/}"
     declare $param="$2"
-    # echo $1 $2
   fi
   shift
 done
@@ -78,10 +74,45 @@ case $lib_type in
   *)
 esac
 
+# Display spinner and text passed to function while waiting for the export
+# Will continue until temp file is deleted by the export process
+# Usage: wait_for_export file_name "text"
+function wait_for_export() {
+    local _tmpfile="$1"
+    local info="$2"
+    local delay=0.08
+    # local spinstr='-\|/'
+    # Alternative spinner using braille characters
+    local spinstr='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+    while [[ -f $_tmpfile ]]; do
+        # Create temp string with all but first spinner character
+        local temp=${spinstr: 1}
+        # Print first spinner character
+        # Using s because c only works for low ascii characters
+        printf " [%.1s] $info" "$spinstr"
+        # Move first spinner character to end of string
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        local reset="\b\b\b\b\b\b"
+        for ((i=1; i<=$(echo $info | wc -c); i++)); do
+            reset+="\b"
+        done
+        printf $reset
+    done
+    # Clear line
+    printf '\33[2K\r'
+}
+
 for LIBRARY in "$lib1" "$lib2"
 do
+  # Construct temp file name based on selected options
+  TMPSUFFIX=.csv.tmp-Wait-Please
+  tmpfile=$DIR/$LIBRARY-$LEVEL$TMPSUFFIX
+
+  # Create dummy temp file so we don't have to wait to start checking
+  touch $tmpfile
+
   # Launch ExportTools via URL for selected library
-  printf "Processing $LIBRARY library:  "
   curl -sG -d "title=${LIBRARY// /%20}" \
     -d "skipts=true" \
     -d "level=${LEVEL// /%20}" \
@@ -90,17 +121,7 @@ do
     "$PLEXURL/applications/ExportTools/launch" \
     > /dev/null
 
-  while :
-  do
-    for c in / - \\ \|
-    do
-      # Update progress spinner
-      printf '%s\b' "$c"
-      sleep .5
-      # When temp file is gone erase line and break out of both loops
-      [[ ! -f $DIR/$LIBRARY-$LEVEL$TMPSUFFIX ]] && { printf '\33[2K\r'; break 2; }
-    done
-  done
+  wait_for_export "$tmpfile" "Processing $LIBRARY library"
 done
 
 getList() {
