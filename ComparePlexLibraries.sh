@@ -129,7 +129,7 @@ getList() {
   awk \
     -v COL1="\"Title\"" \
     -v COL2="\"Year\"" \
-    'BEGIN {FPAT="[^,]*|\"[^\"]|\"\"*\""} \
+    'BEGIN { FPAT = "([^,]*)|(\"[^\"]+\")"; OFS=","} \
     NR==1 { \
       for(i=1;i<=NF;i++) { \
         if($i==COL1)c1=i; \
