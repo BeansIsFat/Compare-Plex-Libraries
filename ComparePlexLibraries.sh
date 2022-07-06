@@ -110,7 +110,8 @@ do
   tmpfile=$DIR/$LIBRARY-$LEVEL$TMPSUFFIX
 
   # Create dummy temp file so we don't have to wait to start checking
-  touch $tmpfile
+  # Using install -D so tmpfile directory will be created if it doesn't already
+  install -D /dev/null $tmpfile
 
   # Launch ExportTools via URL for selected library
   curl -sG -d "title=${LIBRARY// /%20}" \
